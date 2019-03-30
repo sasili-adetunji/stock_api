@@ -35,3 +35,13 @@ def login_admin():
     except Exception as e:
         response_object['message'] = 'Try again.'
         return jsonify(response_object), 500
+
+@auth_blueprint.route('/admin/status', methods=['GET'])
+@authenticate
+def get_user_status(resp):
+    user = User.query.filter_by(id=resp).first()
+    response_object = {
+        'status': 'success',
+        'data': user.to_json()
+    }
+    return jsonify(response_object), 200
