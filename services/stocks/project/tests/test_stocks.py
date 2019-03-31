@@ -70,7 +70,7 @@ class TestStocksService(BaseTestCase):
         )
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 403)
-        self.assertIn('Provide a valid auth token.', data['message'])
+        self.assertIn('Kindly provide a valid auth token.', data['message'])
         self.assertIn('error', data['status'])
 
 

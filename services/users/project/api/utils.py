@@ -10,7 +10,7 @@ def authenticate(f):
     def decorated_function(*args, **kwargs):
         response_object = {
             'status': 'fail',
-            'message': 'Provide a valid auth token.'
+            'message': 'Kindly Provide a valid auth token.'
         }
         auth_header = request.headers.get('Authorization')
         if not auth_header:

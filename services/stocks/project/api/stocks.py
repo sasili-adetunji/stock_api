@@ -10,13 +10,6 @@ from dateutil import parser
 
 stocks_blueprint = Blueprint('stocks', __name__)
 
-@stocks_blueprint.route('/stocks/ping', methods=['GET']) 
-def stocks_pong():
-    return jsonify({ 
-      'status': 'success', 
-      'message': 'stocks'
-})
-
 @stocks_blueprint.route('/stocks/', methods=['POST'])
 @authenticate
 def post_stocks(resp):

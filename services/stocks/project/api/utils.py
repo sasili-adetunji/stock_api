@@ -10,18 +10,18 @@ def authenticate(f):
     def decorated_function(*args, **kwargs):
         response_object = {
             'status': 'error',
-            'message': 'Something went wrong. Please contact us.'
+            'message': 'Something went wrong'
         }
         code = 401
         auth_header = request.headers.get('Authorization')
         if not auth_header:
-            response_object['message'] = 'Provide a valid auth token.'
+            response_object['message'] = 'Kindly provide a valid auth token.'
             code = 403
             return jsonify(response_object), code
         auth_token = auth_header.split(" ")[1]
         response = ensure_authenticated(auth_token)
         if not response:
-            response_object['message'] = 'Invalid token.'
+            response_object['message'] = 'The token is invalid.'
             return jsonify(response_object), code
         return f(response, *args, **kwargs)
     return decorated_function
