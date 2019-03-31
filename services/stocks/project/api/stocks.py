@@ -52,7 +52,7 @@ def post_stocks(resp):
         response_object = {
             'status': 'success',
             'message': 'New stocks was recorded!',
-            'data': stocks.to_json()
+            'stocks': stocks.to_json()
         }
         return jsonify(response_object), 201
     except (exc.IntegrityError, ValueError) as e:
@@ -65,13 +65,27 @@ def post_stocks(resp):
 
 @stocks_blueprint.route('/stocks/', methods=['GET'])
 def get_stocks():
-    stocks = Stocks.query.all()
+
+    begin_date = request.args.get('begin_date')
+    end_date = request.args.get('end_date')
+
+    if (begin_date and end_date):
+        try:
+            stocks = Stocks.query.filter(Stocks.date_time.between(begin_date, end_date)).all()
+        except:
+            return jsonify({
+                'status': 'fail',
+                'message': 'Invalid date'
+            }), 400
+    else:
+        stocks = Stocks.query.all()
+
     results = []
-    for item in stocks:
+    for stock in stocks:
         results.append({
-            'data': item.to_json()
+            'stocks': stock.to_json()
         })
     return jsonify({ 
       'status': 'success', 
-      'results': results
+      'data': results
     }), 200
