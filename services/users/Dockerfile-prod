@@ -1,0 +1,28 @@
+FROM python:3.6.4
+
+# install environment dependencies
+RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
+RUN apt-get -o Acquire::Check-Valid-Until=false update
+
+RUN apt-get install -yqq --no-install-recommends netcat \
+  && apt-get -q clean
+
+# set working directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# add requirements
+COPY ./requirements.txt /usr/src/app/requirements.txt
+
+# install requirements
+RUN pip install -r requirements.txt
+
+# add entrypoint.sh
+COPY ./entrypoint-stage.sh /usr/src/app/entrypoint-stage.sh
+
+# add app
+COPY . /usr/src/app
+
+# run server
+CMD ["./entrypoint-stage.sh"]

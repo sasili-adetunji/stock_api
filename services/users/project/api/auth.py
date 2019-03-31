@@ -7,6 +7,14 @@ from project.api.utils import authenticate
 auth_blueprint = Blueprint('auth', __name__)
 
 
+@auth_blueprint.route('/ping', methods=['GET'])
+def ping_pong():
+    return jsonify({
+        'status': 'success',
+        'message': 'pong!'
+    })
+
+
 @auth_blueprint.route('/admin/login', methods=['POST'])
 def login_admin():
     # get post data

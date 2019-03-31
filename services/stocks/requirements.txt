@@ -4,3 +4,4 @@ psycopg2==2.7.3.2
 Flask-Testing==0.6.2
 requests==2.18.4
 python-dateutil==2.6.1
+gunicorn==19.7.1

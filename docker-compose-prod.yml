@@ -1,0 +1,84 @@
+
+version: '3.4' 
+
+services:
+  users:
+    container_name: users 
+    build:
+      context: ./services/users
+      dockerfile: Dockerfile-prod
+    volumes:
+      - './services/users:/usr/src/app' 
+    # ports:
+    #   - 5001:5000 
+    expose:
+      - '5000'
+    environment:
+      - APP_SETTINGS=project.config.ProductionConfig
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_prod
+      - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
+      - SECRET_KEY=my_precious
+
+    depends_on: 
+      - users-db
+    links:
+      - users-db
+   
+  users-db:
+    container_name: users-db 
+    build:
+      context: ./services/users/project/db
+      dockerfile: Dockerfile 
+    ports:
+      - 5435:5432 
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  stocks:
+    container_name: stocks
+    build:
+      context: ./services/stocks
+      dockerfile: Dockerfile-prod
+    volumes:
+      - './services/stocks:/usr/src/app'
+    # ports:
+    #   - 5002:5000
+    expose:
+      - '5000'
+    environment:
+      - APP_SETTINGS=project.config.ProductionConfig
+      - USERS_SERVICE_URL=http://users:5000
+      - SECRET_KEY=my_precious
+      - DATABASE_URL=postgres://postgres:postgres@stocks-db:5432/stocks_prod
+      - DATABASE_TEST_URL=postgres://postgres:postgres@stocks-db:5432/stocks_test
+    depends_on:
+      - users
+      - stocks-db
+    links:
+      - users
+      - stocks-db
+
+  stocks-db:
+    container_name: stocks-db
+    build:
+      context: ./services/stocks/project/db
+      dockerfile: Dockerfile
+    ports:
+      - 5436:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  
+  nginx:
+    container_name: nginx
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile-prod
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - users
+      - stocks
+  
