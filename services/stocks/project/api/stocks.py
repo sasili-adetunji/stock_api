@@ -4,6 +4,9 @@ from flask import Flask, jsonify, request, Blueprint
 from project.api.models import Stocks
 from project.api.utils import authenticate
 from project import db
+import datetime
+from dateutil import parser
+
 
 stocks_blueprint = Blueprint('stocks', __name__)
 
@@ -38,14 +41,14 @@ def post_stocks(resp):
     highest_price = post_data.get('highest_price')
     lowest_price = post_data.get('lowest_price')
     closing_price = post_data.get('closing_price')
-    date_time = post_data.get('date_time')
+    date = post_data.get('date')
 
     try:
         stocks = Stocks(
             stock_name=stock_name, opening_price=opening_price,
             highest_price= highest_price, lowest_price=lowest_price,
             closing_price=closing_price,
-            date_time=date_time
+            date=date
         )
         db.session.add(stocks)
         db.session.commit()
@@ -71,12 +74,15 @@ def get_stocks():
 
     if (begin_date and end_date):
         try:
-            stocks = Stocks.query.filter(Stocks.date_time.between(begin_date, end_date)).all()
+            parsed_begin = parser.parse(begin_date)
+            parsed_end = parser.parse(end_date)
+
         except:
             return jsonify({
-                'status': 'fail',
-                'message': 'Invalid date'
-            }), 400
+                    'status': 'fail',
+                    'message': 'Invalid date'
+                }), 400
+        stocks = Stocks.query.filter(Stocks.date.between(parsed_begin, parsed_end)).all()
     else:
         stocks = Stocks.query.all()
 

@@ -10,16 +10,16 @@ class Stocks(db.Model):
     highest_price = db.Column(db.String(128), nullable=False)
     lowest_price = db.Column(db.String(128), nullable=False)
     closing_price = db.Column(db.String(128), nullable=False)
-    date_time = db.Column(db.DateTime)
+    date = db.Column(db.Date)
 
 
-    def __init__(self, stock_name, opening_price, highest_price, lowest_price, closing_price, date_time):
+    def __init__(self, stock_name, opening_price, highest_price, lowest_price, closing_price, date):
         self.stock_name = stock_name
         self.opening_price = opening_price
         self.highest_price = highest_price
         self.lowest_price = lowest_price
         self.closing_price = closing_price
-        self.date_time = date_time
+        self.date = date
 
     def to_json(self):
         return {
@@ -29,5 +29,5 @@ class Stocks(db.Model):
             'highest_price': self.highest_price,
             'lowest_price': self.lowest_price,
             'closing_price': self.closing_price,
-            'date_time': self.date_time,
+            'date': self.date,
         }
