@@ -54,7 +54,7 @@ def post_stocks(resp):
         db.session.commit()
         response_object = {
             'status': 'success',
-            'message': 'New stocks was recorded!',
+            'message': 'New stocks was recorded',
             'stocks': stocks.to_json()
         }
         return jsonify(response_object), 201
