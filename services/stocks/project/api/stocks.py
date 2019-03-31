@@ -51,11 +51,11 @@ def post_stocks(resp):
             'stocks': stocks.to_json()
         }
         return jsonify(response_object), 201
-    except (exc.IntegrityError, ValueError) as e:
+    except (exc.IntegrityError, exc.DataError, ValueError) as e:
         db.session().rollback()
         response_object = {
             'status': 'fail',
-            'message': 'Invalid payload'
+            'message': 'Invalid data type in the payload'
         }
         return jsonify(response_object), 400
 
