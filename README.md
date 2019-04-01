@@ -6,8 +6,14 @@ A stock broking api what will allow for administrator access, user access. The s
 - Download or clone the app to your local machine
 - Move into local directory `cd stock_api`
 - Ensure docker is running on your machine
+- Run `docker-machine create -d virtualbox stockapi-dev`
+- Run `docker-machine env stockapi-dev`
+- Run `eval "$(docker-machine env stockapi-dev)"`
 - Run `chmod +x ./install.sh`
 - Run the script `./install.sh`
+- Create users tables by running `docker-compose -f docker-compose-dev.yml run users python manage.py recreate-db`
+- Create stocks tables by running `docker-compose -f docker-compose-dev.yml run stocks python manage.py recreate-db`
+- Seed users tables with admin credentials by running `docker-compose -f docker-compose-dev.yml run users python manage.py seed-db`
 - Run `docker-machine ip stockapi-dev` to get the IP Address.
 
 ## Endpoints
