@@ -1,11 +1,9 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
 
 # instantiate the db
 db = SQLAlchemy()
-bcrypt = Bcrypt()
 
 
 def create_app(script_info=None):
@@ -19,11 +17,10 @@ def create_app(script_info=None):
 
     # set up extensions
     db.init_app(app)
-    bcrypt.init_app(app)
 
     # register blueprints
-    from project.api.auth import auth_blueprint
-    app.register_blueprint(auth_blueprint)
+    from project.api.stocks import stocks_blueprint
+    app.register_blueprint(stocks_blueprint)
 
     # shell context for flask cli
     app.shell_context_processor({'app': app, 'db': db})

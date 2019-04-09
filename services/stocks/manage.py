@@ -1,6 +1,5 @@
 from flask.cli import FlaskGroup
 from project import create_app, db
-from project.api.models import User
 import unittest
 
 app = create_app()
@@ -21,14 +20,6 @@ def test():
     return 0
   return 1
 
-@cli.command()
-def seed_db():
-    """Seeds the database with the admin"""
-    db.session.add(User(
-        email='admin@gmail.com',
-        password='sasiliyu'
-    ))
-    db.session.commit()
 
 if __name__ == '__main__':
     cli()
